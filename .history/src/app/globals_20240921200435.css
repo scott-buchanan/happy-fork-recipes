@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@layer base {
+  h1 {
+    @apply text-2xl mb-3;
+  }
+  h2 {
+    @apply text-xl mb-3;
+  }
+  h3 {
+    @apply text-lg mb-3;
+  }
+  a {
+    @apply text-blue-600 underline;
+  }
+
+  ul {
+    @apply list-disc;
+  }
+}

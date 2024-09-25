@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@layer base {
+  h1 {
+    @apply text-2xl mb-3 font-semibold;
+  }
+  h2 {
+    @apply text-xl mb-3 font-semibold;
+  }
+  h3 {
+    @apply text-lg mb-3 font-semibold;
+  }
+  a {
+    @apply text-blue-600 underline;
+  }
+
+  ul {
+    @apply list-outside list-disc ps-5;
+  }
+  
+  ol {
+    @apply list-outside list-decimal ps-5;
+  }
+
+  li {
+    @apply mb-3
+  }
+  
+  ul li::marker {
+    @apply text-primary
+  }
+
+  ol li::marker {
+    @apply font-bold text-xl
+  }
+}

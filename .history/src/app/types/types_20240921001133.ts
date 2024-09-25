@@ -1,7 +1,0 @@
-interface recipe {
-    
-}
-
-interface recipes {
-    
-}

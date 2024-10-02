@@ -28,6 +28,8 @@ export interface Recipe {
   servings: number;
   sourceUrl: string;
   image: string;
+  img: Img;
+  dataUrl: string;
   imageType: string;
   summary: string;
   cuisines: string[];
@@ -40,6 +42,11 @@ export interface Recipe {
   spoonacularSourceUrl: string;
 }
 
+export interface Img {
+  src: string;
+  height: number;
+  width: number;
+}
 interface Instruction {
   name: string;
   steps: Step[];

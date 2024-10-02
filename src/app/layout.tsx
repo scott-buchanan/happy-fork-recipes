@@ -1,5 +1,6 @@
+import { GlobalProvider } from '../context/GlobalContext';
 import type { Metadata } from 'next';
-import './globals.css';
+import '@/styles/globals.css';
 import '@mantine/core/styles.css';
 import { ColorSchemeScript, MantineProvider } from '@mantine/core';
 
@@ -19,13 +20,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full">
-      <head>
-        <ColorSchemeScript />
-      </head>
-      <body className={`${inter.className} flex h-full flex-col bg-slate-100 antialiased`}>
-        <MantineProvider>{children}</MantineProvider>
-      </body>
-    </html>
+    <GlobalProvider>
+      <html lang="en" className="h-full">
+        <head>
+          <ColorSchemeScript />
+        </head>
+        <body className={`${inter.className} flex h-full flex-col bg-slate-100 antialiased`}>
+          <MantineProvider>{children}</MantineProvider>
+        </body>
+      </html>
+    </GlobalProvider>
   );
 }

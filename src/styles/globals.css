@@ -19,7 +19,11 @@
     @apply text-xl mb-3 font-extralight;
   }
   a {
-    @apply text-blue-600 underline;
+    @apply text-blue-600 underline underline-offset-2 hover:text-blue-800;
+  }
+
+  a, button, input, textarea {
+    @apply focus-visible:!outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-transparent;
   }
 
   ul {

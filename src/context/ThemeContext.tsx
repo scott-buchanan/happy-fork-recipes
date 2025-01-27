@@ -1,5 +1,6 @@
 'use client';
 import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
+import { useMantineColorScheme } from '@mantine/core';
 
 interface ThemeProvider {
   theme: string;
@@ -16,6 +17,7 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const [theme, setTheme] = useState<string>(getThemeFromLocalStorage);
+  const { colorScheme, setColorScheme } = useMantineColorScheme();
 
   // Apply theme on mount and when theme changes
   useEffect(() => {
@@ -25,7 +27,10 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   }, [theme]);
 
   const toggleTheme = () => {
-    setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
+    setTheme((prevTheme) => {
+      setColorScheme(prevTheme === 'dark' ? 'light' : 'dark');
+      return prevTheme === 'light' ? 'dark' : 'light';
+    });
   };
 
   return <ThemeContext.Provider value={{ theme, toggleTheme }}>{children}</ThemeContext.Provider>;

@@ -1,9 +1,8 @@
 import { Img } from './types';
 
 export interface SearchResults {
-  query: string | null;
-  cuisine: string | null;
-  recipes: SearchResult[];
+  results: SearchResult[] | null;
+  totalResults: number | null;
   error?: string;
 }
 

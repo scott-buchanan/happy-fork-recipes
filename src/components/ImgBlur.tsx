@@ -1,3 +1,5 @@
+'use client';
+import { useEffect } from 'react';
 import Image, { StaticImageData } from 'next/image';
 import { ReactNode, useState } from 'react';
 
@@ -25,6 +27,10 @@ export default function ImgBlur({
   quality = 100,
 }: ImgProps) {
   const [newImg, setNewImg] = useState<string | StaticImageData>(src);
+
+  useEffect(() => {
+    setNewImg(src);
+  }, [src]);
 
   function handleImgError() {
     setNewImg('/images/default-recipe.jpg');

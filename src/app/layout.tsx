@@ -1,10 +1,12 @@
-import { GlobalProvider } from '../context/GlobalContext';
-import type { Metadata } from 'next';
 import '@/styles/globals.css';
 import '@mantine/core/styles.css';
-import { ColorSchemeScript, MantineProvider } from '@mantine/core';
 
+import { GlobalProvider } from '@/context/GlobalContext';
+import { ColorSchemeScript, MantineProvider } from '@mantine/core';
 import { Inter } from 'next/font/google';
+import { ThemeProvider } from '@/context/ThemeContext';
+
+import type { Metadata } from 'next';
 
 // If loading a variable font, you don't need to specify the font weight
 const inter = Inter({ subsets: ['latin'] });
@@ -19,16 +21,31 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // const setInitialTheme = `
+  //   (function() {
+  //     const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  //     const storedTheme = localStorage.getItem('theme');
+  //     const theme = storedTheme || (prefersDarkMode ? 'dark' : 'light');
+  //     document.documentElement.classList.add(theme);
+  //     if (!storedTheme) {
+  //       localStorage.setItem('theme', theme);
+  //     }
+  //   })();
+  // `;
+
   return (
-    <GlobalProvider>
-      <html lang="en" className="h-full">
-        <head>
-          <ColorSchemeScript />
-        </head>
-        <body className={`${inter.className} flex h-full flex-col bg-slate-100 antialiased`}>
-          <MantineProvider>{children}</MantineProvider>
-        </body>
-      </html>
-    </GlobalProvider>
+    <html lang="en" className="h-full">
+      <head>
+        <ColorSchemeScript />
+        {/* <script dangerouslySetInnerHTML={{ __html: setInitialTheme }} /> */}
+      </head>
+      <body className={`${inter.className} flex h-full flex-col antialiased`}>
+        <MantineProvider>
+          <ThemeProvider>
+            <GlobalProvider>{children}</GlobalProvider>
+          </ThemeProvider>
+        </MantineProvider>
+      </body>
+    </html>
   );
 }

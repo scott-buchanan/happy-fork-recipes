@@ -15,6 +15,14 @@ const nextConfig = {
     ],
   },
   reactStrictMode: false, // disable because of API quota
+  logging: {
+    fetches: {
+      fullUrl: true,
+    },
+  },
+  experimental: {
+    optimizePackageImports: ['@mantine/core', '@mantine/hooks'],
+  },
 };
 
 export default withPlaiceholder(nextConfig);

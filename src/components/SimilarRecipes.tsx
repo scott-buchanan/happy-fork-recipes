@@ -1,21 +1,24 @@
 import Link from 'next/link';
-import { SimilarRecipes } from '../types/types';
+import { SimilarRecipe } from '@/lib/types/types';
 
 interface Props {
-  recipes: SimilarRecipes;
+  recipes: SimilarRecipe[] | null;
 }
 
-export default function SimilarRecipesList({ recipes }: Props) {
-  if (!recipes) return null;
-
+export default function SimilarRecipesList({ recipes = null }: Props) {
+  if (recipes?.length === 0) {
+    return null;
+  }
   return (
-    <ul>
-      {recipes.similarRecipes &&
-        recipes.similarRecipes.map((item, index) => (
+    <>
+      <h2>Similar Recipes</h2>
+      <ul>
+        {recipes?.map((item, index) => (
           <li key={index}>
             <Link href={`/recipe?id=${item.id}`}>{item.title}</Link>
           </li>
         ))}
-    </ul>
+      </ul>
+    </>
   );
 }

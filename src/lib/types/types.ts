@@ -1,7 +1,3 @@
-export interface Recipes {
-  recipes: Recipe[];
-}
-
 export interface Recipe {
   vegetarian: boolean;
   vegan: boolean;
@@ -47,12 +43,12 @@ export interface Img {
   height: number;
   width: number;
 }
-interface Instruction {
+export interface Instruction {
   name: string;
   steps: Step[];
 }
 
-interface Step {
+export interface Step {
   number: number;
   step: string;
   ingredients: {
@@ -73,7 +69,7 @@ interface Step {
   };
 }
 
-interface Ingredient {
+export interface Ingredient {
   id: number;
   aisle: string;
   image: string;

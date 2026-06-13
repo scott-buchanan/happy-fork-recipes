@@ -1,22 +1,33 @@
-import HeaderBackground from '@/components/HeaderBackground';
-import LogoNav from '@/components/LogoNav';
-import HeaderSearch from '@/components/HeaderSearch';
-import ToggleTheme from '@/components/ToggleTheme';
+import HeaderBackground from '@/components/layout/HeaderBackground';
+import LogoNav from '@/components/layout/LogoNav';
+import HeaderSearch from '@/components/layout/HeaderSearch';
+import ToggleTheme from '@/components/layout/ToggleTheme';
+import { Suspense } from 'react';
 
-export const PageTemplate: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const PageTemplate = ({ children }) => {
   return (
     <>
-      <header className="relative">
+      <header className="relative bg-gray-100 dark:bg-gray-700">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-1/2 focus:top-4 focus:z-50 focus:-translate-x-1/2 focus:rounded-lg focus:bg-black focus:px-6 focus:py-3 focus:text-white focus:shadow-lg"
+        >
+          Skip to main content
+        </a>
         <HeaderBackground />
         <div className="container relative mx-auto px-5 pb-3 pt-10">
           <ToggleTheme className="absolute left-5 top-5" />
           <LogoNav />
-          <HeaderSearch />
+          <Suspense>
+            <HeaderSearch />
+          </Suspense>
         </div>
       </header>
-      <main className="flex-grow bg-gray-100 dark:bg-gray-700">
-        <div className="container mx-auto mt-5 px-5">{children}</div>
-      </main>
+      <div className="flex-grow bg-gray-100 dark:bg-gray-700">
+        <main id="main-content" className="container mx-auto mt-5 px-5" tabIndex={-1}>
+          {children}
+        </main>
+      </div>
       <footer className="bg-slate-700 px-3 py-5 text-left text-white dark:bg-gray-800 xs:text-center">
         <p className="mb-3 text-sm">
           Built with{' '}

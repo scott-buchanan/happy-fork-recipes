@@ -6,19 +6,20 @@ interface Props {
 }
 
 export default function SimilarRecipesList({ recipes = null }: Props) {
-  if (recipes?.length === 0) {
+  if (!recipes || recipes.length === 0) {
     return null;
   }
+
   return (
-    <>
+    <section>
       <h2>Similar Recipes</h2>
       <ul>
         {recipes?.map((item, index) => (
-          <li key={index}>
+          <li key={`${item.id}-${index}`}>
             <Link href={`/recipe?id=${item.id}`}>{item.title}</Link>
           </li>
         ))}
       </ul>
-    </>
+    </section>
   );
 }

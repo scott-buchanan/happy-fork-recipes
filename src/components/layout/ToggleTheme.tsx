@@ -1,9 +1,17 @@
 'use client';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { useThemeContext } from '@/context/ThemeContext';
+import { useTheme } from 'next-themes';
+import { useMantineColorScheme } from '@mantine/core';
 
 export default function ToggleTheme({ className = '' }: { className?: string }) {
-  const { theme, toggleTheme } = useThemeContext();
+  const { theme, setTheme } = useTheme();
+  const { setColorScheme } = useMantineColorScheme();
+
+  function toggleTheme() {
+    setTheme(theme === 'dark' ? 'light' : 'dark');
+    // for mantine components
+    setColorScheme(theme === 'dark' ? 'light' : 'dark');
+  }
 
   return (
     <button onClick={toggleTheme} aria-label="Toggle theme" className={className}>

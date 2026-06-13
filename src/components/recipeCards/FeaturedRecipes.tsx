@@ -1,4 +1,4 @@
-import RecipeCardContainer from './RecipeCardContainer';
+import RecipeCardContainer from '@/components/recipeCards/RecipeCardContainer';
 import { getFeaturedRecipes } from '@/lib/api/api';
 import { Recipe } from '@/lib/types/types';
 
@@ -14,7 +14,11 @@ export default async function FeaturedRecipes() {
     <>
       <h2 className="mb-6 mt-3">Featured Recipes</h2>
       {data.error && <p>{data.error}</p>}
-      {data.results && <RecipeCardContainer data={data} />}
+      {data.results && (
+        <RecipeCardContainer
+          data={{ ...data, results: data.results, totalResults: data.results.length }}
+        />
+      )}
     </>
   );
 }

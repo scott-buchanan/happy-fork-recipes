@@ -1,6 +1,6 @@
 'use client';
 import { Recipe } from '@/lib/types/types';
-import Img from './ImgBlur';
+import Img from '@/components/ImgBlur';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { SegmentedControl } from '@mantine/core';
 import { roundToTenth } from '@/lib/utils/utils';
@@ -8,7 +8,7 @@ import { capitalize } from '@/lib/utils/utils';
 import { useGlobalContext } from '@/context/GlobalContext';
 
 interface RecipeInfoProps {
-  recipeData?: Recipe | null;
+  recipeData: Recipe | null;
 }
 
 export default function Ingredients({ recipeData = null }: RecipeInfoProps) {

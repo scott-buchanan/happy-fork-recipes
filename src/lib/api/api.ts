@@ -1,10 +1,20 @@
 import { Recipe, SimilarRecipe } from '@/lib/types/types';
 import { getImage } from '@/lib/utils/getImage';
 import { cardCount } from '../constants/constants';
-import { SearchResult, SearchResults } from '../types/search';
+import { SearchResult } from '../types/search';
 
-const apiKey = process.env.NEXT_PUBLIC_API_KEY;
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+const apiKey = process.env.SPOONACULAR_API_KEY_2;
+
+function handleApiError(response: Response) {
+  if (!response.ok) {
+    if (response.status === 402) {
+      return {
+        error: 'API daily quota exceeded. Please try again later.',
+      };
+    }
+    throw new Error(`API request failed with status ${response.status}`);
+  }
+}
 
 /**
  * Retrieves a random food trivia from the Spoonacular API.
@@ -22,6 +32,9 @@ export async function getTrivia(): Promise<{
         next: { revalidate: 86400 },
       },
     );
+
+    handleApiError(response);
+
     const results = await response.json();
     return { results };
   } catch (err) {
@@ -40,17 +53,16 @@ export async function getFeaturedRecipes(): Promise<{
   results?: Recipe[];
   error?: string;
 }> {
-  // await new Promise((resolve) => {
-  //   setTimeout(resolve, 5000);
-  // });
   try {
     const response = await fetch(
-      `https://api.spoonacular.com/recipes/random?apiKey=${process.env.NEXT_PUBLIC_API_KEY}&number=${cardCount}`,
+      `https://api.spoonacular.com/recipes/random?apiKey=${apiKey}&number=${cardCount}`,
       {
         method: 'GET',
         next: { revalidate: 86400 },
       },
     );
+
+    handleApiError(response);
 
     const res = await response.json();
     const recipes: Recipe[] = await Promise.all(
@@ -64,7 +76,6 @@ export async function getFeaturedRecipes(): Promise<{
       }),
     );
 
-    console.log('HEADERS: ', response.headers.get('cf-cache-status'));
     return { results: recipes };
   } catch (err) {
     return {
@@ -83,18 +94,19 @@ export async function getRecipe(id: string | null): Promise<{ results?: Recipe; 
 
   try {
     const response = await fetch(
-      `https://api.spoonacular.com/recipes/${id}/information?apiKey=${process.env.NEXT_PUBLIC_API_KEY}`,
+      `https://api.spoonacular.com/recipes/${id}/information?apiKey=${apiKey}`,
       {
         method: 'GET',
         next: { revalidate: 86400 },
       },
     );
 
+    handleApiError(response);
+
     let res = await response.json();
 
     const { base64, img } = await getImage(res.image);
     res = { ...res, ...{ dataUrl: base64, img } };
-    console.log('HEADERS: ', response.headers.get('cf-cache-status'));
 
     return { results: res };
   } catch (err) {
@@ -117,12 +129,14 @@ export async function getSimilarRecipes(id: string | null): Promise<{
 
   try {
     const response = await fetch(
-      `https://api.spoonacular.com/recipes/${id}/similar?apiKey=${process.env.NEXT_PUBLIC_API_KEY}&number=5`,
+      `https://api.spoonacular.com/recipes/${id}/similar?apiKey=${apiKey}&number=5`,
       {
         method: 'GET',
         next: { revalidate: 86400 },
       },
     );
+
+    handleApiError(response);
 
     const res = await response.json();
 
@@ -148,14 +162,13 @@ export async function getSearchRecipes(
   page: string,
   pageSize: number = cardCount,
 ): Promise<{
-  results: SearchResult[] | null;
-  totalResults: number | null;
-  error?: string;
+  results: SearchResult[];
+  totalResults: number;
 }> {
   try {
     const offset = (Math.max(parseInt(page) - 1, 0) * pageSize).toString();
     const params = new URLSearchParams({
-      apiKey: process.env.NEXT_PUBLIC_API_KEY ?? '',
+      apiKey: apiKey ?? '',
       query: query ?? '',
       cuisine: cuisine ?? '',
       offset,
@@ -167,9 +180,13 @@ export async function getSearchRecipes(
       next: { revalidate: 86400 },
     });
 
+    if (!response.ok) {
+      throw new Error(`API request failed with status ${response.status}`);
+    }
+
     const res = await response.json();
     const recipes: SearchResult[] = await Promise.all(
-      res.results.map(async (recipe: SearchResult) => {
+      res.results?.map(async (recipe: SearchResult) => {
         const { base64, img } = await getImage(recipe.image);
         return {
           ...recipe,
@@ -181,10 +198,6 @@ export async function getSearchRecipes(
 
     return { results: recipes, totalResults: res.totalResults };
   } catch (err) {
-    return {
-      results: null,
-      totalResults: null,
-      error: 'Something went wrong: ' + (err instanceof Error ? err.message : String(err)),
-    };
+    throw new Error(err instanceof Error ? err.message : 'Unknown error occurred');
   }
 }

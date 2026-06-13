@@ -2,9 +2,9 @@ import '@/styles/globals.css';
 import '@mantine/core/styles.css';
 
 import { GlobalProvider } from '@/context/GlobalContext';
-import { ColorSchemeScript, MantineProvider } from '@mantine/core';
+import { MantineProvider } from '@mantine/core';
 import { Inter } from 'next/font/google';
-import { ThemeProvider } from '@/context/ThemeContext';
+import { ThemeProvider } from 'next-themes';
 
 import type { Metadata } from 'next';
 
@@ -21,29 +21,13 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // const setInitialTheme = `
-  //   (function() {
-  //     const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  //     const storedTheme = localStorage.getItem('theme');
-  //     const theme = storedTheme || (prefersDarkMode ? 'dark' : 'light');
-  //     document.documentElement.classList.add(theme);
-  //     if (!storedTheme) {
-  //       localStorage.setItem('theme', theme);
-  //     }
-  //   })();
-  // `;
-
   return (
-    <html lang="en" className="h-full">
-      <head>
-        <ColorSchemeScript />
-        {/* <script dangerouslySetInnerHTML={{ __html: setInitialTheme }} /> */}
-      </head>
+    <html lang="en" className="h-full" suppressHydrationWarning>
       <body className={`${inter.className} flex h-full flex-col antialiased`}>
         <MantineProvider>
-          <ThemeProvider>
-            <GlobalProvider>{children}</GlobalProvider>
-          </ThemeProvider>
+          <GlobalProvider>
+            <ThemeProvider attribute="class">{children}</ThemeProvider>
+          </GlobalProvider>
         </MantineProvider>
       </body>
     </html>

@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, ReactNode } from 'react';
 import { Chip } from '@mantine/core';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { useRouter } from 'next/navigation';
@@ -20,6 +20,7 @@ export default function SearchResultsHeader({
   const router = useRouter();
   const [objQuery, setObjQuery] = useState<objParam[] | null>(null);
   const [objCuisine, setObjCuisine] = useState<objParam | null>(null);
+  const [pageTitle, setPageTitle] = useState<string | ReactNode>('');
 
   // page load
   useEffect(() => {
@@ -40,6 +41,43 @@ export default function SearchResultsHeader({
     }
   }, [query, cuisine]);
 
+  // when the search changes, update the page title
+  useEffect(() => {
+    const cuisineName = cuisines.find((item) => item.value === objCuisine?.name)?.name;
+    const activeQueries = objQuery?.filter((item) => item.active).length || 0;
+
+    // if no cuisine and no active query, show generic title
+    if (objCuisine && !objCuisine.active && activeQueries === 0) {
+      setPageTitle('Showing all recipes');
+      return;
+    }
+
+    // if cuisine is active and no active query, show cuisine title
+    if (objCuisine && objCuisine?.active && activeQueries === 0) {
+      setPageTitle(
+        <>
+          Results for <strong className="font-semi-bold text-2xl">{cuisineName}</strong> cuisine
+        </>,
+      );
+      return;
+    }
+    if ((objCuisine && objCuisine.active) || activeQueries > 0) {
+      const cleanQuery = query
+        ?.split(' ')
+        .map((word) => (word.charAt(0) !== '!' ? word : null))
+        .join(' ');
+      setPageTitle(
+        <>
+          Results for{' '}
+          <strong className="font-semi-bold text-2xl">
+            {objCuisine?.active ? cuisineName : ''} {cleanQuery}
+          </strong>
+        </>,
+      );
+    }
+  }, [objQuery, objCuisine, query]);
+
+  // do the search
   useEffect(() => {
     if (objQuery || objCuisine) {
       const queryParts = [];
@@ -50,7 +88,7 @@ export default function SearchResultsHeader({
 
       if (objQuery) {
         const queryString = objQuery
-          .map((item) => (item.active ? item.name : `!${item.name}`))
+          ?.map((item) => (item.active ? item.name : `!${item.name}`))
           .join('+');
         queryParts.push(`q=${queryString}`);
       }
@@ -84,43 +122,10 @@ export default function SearchResultsHeader({
     return cuisines.find((item) => item.value === value)?.name || '';
   }
 
-  function getPageTitle() {
-    if (objCuisine && objQuery) {
-      const cuisineName = cuisines.find((item) => item.value === objCuisine.name)?.name;
-      const activeQueries = objQuery.filter((item) => item.active).length;
-
-      if (!objCuisine.active && activeQueries === 0) {
-        return 'Results';
-      }
-      if (objCuisine.active && activeQueries === 0) {
-        return (
-          <>
-            Results for <strong className="font-semi-bold text-2xl">{cuisineName}</strong> cuisine
-          </>
-        );
-      }
-      if (objCuisine.active || activeQueries > 0) {
-        const cleanQuery = query
-          ?.split(' ')
-          .map((word) => (word.charAt(0) !== '!' ? word : null))
-          .join(' ');
-        return (
-          <>
-            Results for{' '}
-            <strong className="font-semi-bold text-2xl">
-              {objCuisine.active ? cuisineName : ''} {cleanQuery}
-            </strong>
-          </>
-        );
-      }
-    }
-    return 'Results';
-  }
-
   return (
     <div className="mb-4 flex items-center justify-between">
       <div>
-        <h1 className="m-0 text-xl font-light">{getPageTitle()}</h1>
+        <h1 className="m-0 text-xl font-light">{pageTitle}</h1>
       </div>
       <div className="flex">
         {objCuisine && (
@@ -148,7 +153,7 @@ export default function SearchResultsHeader({
             </strong>
             <ul className="flex list-none p-0">
               <li className="m-0">
-                {objQuery.map((item: { name: string; active: boolean }, index) => (
+                {objQuery?.map((item: { name: string; active: boolean }, index) => (
                   <Chip
                     key={index}
                     className="ml-3 inline-block"

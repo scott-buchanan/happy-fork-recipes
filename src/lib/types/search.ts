@@ -1,8 +1,8 @@
 import { Img } from './types';
 
 export interface SearchResults {
-  results: SearchResult[] | null;
-  totalResults: number | null;
+  results: SearchResult[];
+  totalResults: number;
   error?: string;
 }
 

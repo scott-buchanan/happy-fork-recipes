@@ -1,5 +1,4 @@
 'use client';
-
 import { Select, TextInput, ActionIcon } from '@mantine/core';
 import { Icon } from '@iconify/react';
 import { cuisines } from '@/lib/constants/constants';
@@ -18,7 +17,7 @@ export default function HeaderSearch() {
   const [cleanQuery, setCleanQuery] = useState<string>(localQuery?.replaceAll('!', ''));
   const [cleanCuisine, setCleanCuisine] = useState<string>(localCuisine?.replace('!', ''));
   // static
-  const cuisineData = cuisines.map((item) => ({ label: item.name, value: item.value }));
+  const cuisineData = cuisines?.map((item) => ({ label: item.name, value: item.value }));
 
   function performSearch(): void {
     const params: string[] = [];
@@ -32,7 +31,6 @@ export default function HeaderSearch() {
     }
 
     const queryString = params.join('&');
-    console.log(queryString);
     router.push(`/search?${queryString}`);
   }
   function handleKeyDownSearch(e: React.KeyboardEvent<HTMLInputElement>): void {

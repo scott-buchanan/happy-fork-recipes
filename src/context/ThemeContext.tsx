@@ -17,7 +17,7 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const [theme, setTheme] = useState<string>(getThemeFromLocalStorage);
-  const { colorScheme, setColorScheme } = useMantineColorScheme();
+  const { setColorScheme } = useMantineColorScheme();
 
   // Apply theme on mount and when theme changes
   useEffect(() => {
@@ -28,6 +28,8 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
 
   const toggleTheme = () => {
     setTheme((prevTheme) => {
+      setColorScheme(prevTheme === 'dark' ? 'light' : 'dark');
+      // for mantine components
       setColorScheme(prevTheme === 'dark' ? 'light' : 'dark');
       return prevTheme === 'light' ? 'dark' : 'light';
     });

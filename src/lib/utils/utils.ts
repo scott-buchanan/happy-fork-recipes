@@ -7,7 +7,7 @@ export function capitalize(words: string): string {
     const arr = words.trim().split(' ');
     if (arr.length > 0) {
       return arr
-        .map((word) => capitalizeWord(word))
+        ?.map((word) => capitalizeWord(word))
         .join(' ')
         .trim();
     }

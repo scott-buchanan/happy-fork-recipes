@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { Recipe } from '@/lib/types/types';
-import Img from './ImgBlur';
+import Img from '@/components/ImgBlur';
 import { Skeleton } from '@mantine/core';
 
 interface Props {
@@ -56,7 +56,7 @@ export function RecipeCard({ recipe, className }: Props) {
 
         {/* Ribbon */}
         {ribbonText() !== null && (
-          <div className="absolute right-0 top-0 translate-x-14 translate-y-4 rotate-45 transform bg-secondary px-16 py-1 text-center text-xs font-bold text-white">
+          <div className="text- absolute right-0 top-0 translate-x-14 translate-y-4 rotate-45 transform bg-secondary px-16 py-1 text-center text-xs font-bold text-gray-900">
             {ribbonText()}
           </div>
         )}

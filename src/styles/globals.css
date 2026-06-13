@@ -10,42 +10,45 @@
 
 @layer base {
   body {
-    @apply text-gray-950 dark:text-gray-100;
+    @apply !text-gray-950 dark:!text-gray-100;
   }
   h1 {
-    @apply text-4xl mb-3 font-extralight;
+    @apply mb-3 text-4xl font-extralight;
   }
   h2 {
-    @apply text-3xl mb-3 font-extralight;
+    @apply mb-3 text-3xl font-extralight;
   }
   h3 {
-    @apply text-xl mb-3 font-extralight;
+    @apply mb-3 text-xl font-extralight;
   }
   a {
-    @apply text-blue-600 dark:text-white underline underline-offset-2 dark:hover:text-white hover:text-blue-800;
+    @apply text-blue-600 underline underline-offset-2 hover:text-blue-800 dark:text-white dark:hover:text-white;
   }
 
-  a, button, input, textarea {
+  a,
+  button,
+  input,
+  textarea {
     @apply focus-visible:!outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-transparent;
   }
 
   ul {
     @apply list-outside list-disc ps-3;
   }
-  
+
   ol {
     @apply list-outside list-decimal;
   }
 
   li {
-    @apply mb-3 list-inside
+    @apply mb-3 list-inside;
   }
-  
+
   ul li::marker {
-    @apply text-primary
+    @apply text-primary;
   }
 
   ol li::marker {
-    @apply font-extralight text-2xl bg-secondary rounded-full p-3 border border-white 
+    @apply rounded-full border border-white bg-secondary p-3 text-2xl font-extralight;
   }
 }

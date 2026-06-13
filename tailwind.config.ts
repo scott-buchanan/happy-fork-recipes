@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss';
+import { primary, secondary } from './src/theme/colours';
 
 const config: Config = {
   darkMode: 'class',
@@ -10,8 +11,8 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        primary: '#f68632',
-        secondary: '#68b651',
+        primary: primary,
+        secondary: secondary,
       },
       screens: {
         xs: '480px',

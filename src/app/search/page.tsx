@@ -1,29 +1,19 @@
 import { PageTemplate } from '@/components/layout/PageTemplate';
 import SearchResultsHeader from '@/components/search/SearchResultsHeader';
-import RecipeCardContainer from '@/components/RecipeCardContainer';
+import RecipeCardContainer from '@/components/recipeCards/RecipeCardContainer';
 import { getSearchRecipes } from '@/lib/api/api';
 import { SearchResults } from '@/lib/types/search';
-import { capitalize } from '@/lib/utils/utils';
 
-interface Props {
+interface SearchPageProps {
   searchParams: {
-    [key: string]: string;
+    q: string;
+    cuisine?: string;
+    page?: string;
   };
 }
 
-const Props = {
-  searchParams: {
-    type: 'object',
-    required: true,
-  },
-};
-
-export default async function Search({ searchParams }: Props) {
-  // const cuisine = getCuisine(searchParams.cuisine);
-  // const searchString = getQuery(searchParams.q || '');
-  const cuisine = searchParams.cuisine || '';
-  const searchString = searchParams.q || '';
-  const page = searchParams.page || '1';
+export default async function Search({ searchParams }: SearchPageProps) {
+  const { cuisine = '', q: searchString = '', page = '1' } = searchParams;
   const searchResults: SearchResults = await getSearchRecipes(
     getQuery(searchString),
     getCuisine(cuisine),
@@ -35,12 +25,13 @@ export default async function Search({ searchParams }: Props) {
     if (!cuisine) return '';
     return cuisine.charAt(0) === '!' ? '' : cuisine;
   }
+
   // only send active query words
   function getQuery(query: string) {
     if (!query) return '';
     return query
       .split(' ')
-      .map((word) => {
+      ?.map((word) => {
         if (word.charAt(0) !== '!') {
           return word;
         }
@@ -48,6 +39,7 @@ export default async function Search({ searchParams }: Props) {
       .join(' ')
       .trim();
   }
+
   return (
     <PageTemplate>
       <section aria-label="Search Results" key={`${searchString}${cuisine}`}>
@@ -55,7 +47,7 @@ export default async function Search({ searchParams }: Props) {
           <SearchResultsHeader query={searchString} cuisine={cuisine} />
         </header>
 
-        <RecipeCardContainer data={searchResults} />
+        <RecipeCardContainer data={searchResults} pagination={true} />
       </section>
     </PageTemplate>
   );

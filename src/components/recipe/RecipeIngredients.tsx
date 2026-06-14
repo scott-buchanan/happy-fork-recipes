@@ -3,8 +3,7 @@ import { Recipe } from '@/lib/types/types';
 import Img from '@/components/ImgBlur';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { SegmentedControl } from '@mantine/core';
-import { roundToTenth } from '@/lib/utils/utils';
-import { capitalize } from '@/lib/utils/utils';
+import { roundToTenth, roundToHundred, capitalize } from '@/lib/utils/utils';
 import { useGlobalContext } from '@/context/GlobalContext';
 
 interface RecipeInfoProps {
@@ -13,6 +12,17 @@ interface RecipeInfoProps {
 
 export default function Ingredients({ recipeData = null }: RecipeInfoProps) {
   const { metric, setMetric } = useGlobalContext();
+
+  function formatIngredient(
+    ingredient: Recipe['extendedIngredients'][number],
+    metric: boolean,
+  ): string {
+    const measure = metric ? ingredient.measures.metric : ingredient.measures.us;
+    const amount = metric ? roundToTenth(measure.amount) : roundToHundred(measure.amount);
+    const unit = measure.unitShort;
+    const name = capitalize(ingredient.nameClean || ingredient.name);
+    return `${amount} ${unit} ${name}`;
+  }
 
   return (
     recipeData && (
@@ -55,9 +65,7 @@ export default function Ingredients({ recipeData = null }: RecipeInfoProps) {
 
           <ul className="ml-2 sm:ml-0 sm:columns-2 lg:ml-3 lg:columns-1">
             {recipeData.extendedIngredients?.map((ingredient) => (
-              <li key={JSON.stringify(ingredient)}>
-                {`${metric ? roundToTenth(ingredient.measures.metric.amount) : ingredient.measures.us.amount} ${ingredient.measures[metric ? 'metric' : 'us'].unitShort} ${capitalize(ingredient.nameClean || ingredient.name)}`}
-              </li>
+              <li key={JSON.stringify(ingredient)}>{formatIngredient(ingredient, metric)}</li>
             ))}
           </ul>
         </div>

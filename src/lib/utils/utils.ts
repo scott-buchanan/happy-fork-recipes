@@ -19,3 +19,8 @@ export function roundToTenth(num: number): number {
   const rounded: number = parseFloat(num.toFixed(1));
   return rounded % 1 === 0 ? Math.floor(rounded) : rounded;
 }
+
+export function roundToHundred(num: number): number {
+  const rounded: number = parseFloat(num.toFixed(2));
+  return rounded % 1 === 0 ? Math.floor(rounded) : rounded;
+}
